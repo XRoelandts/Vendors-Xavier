@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -6,13 +8,19 @@ import java.util.HashMap;
  * well as the current balance of money that has been deposited into the machine.
  */
 class Vending {
-    private HashMap<String, Item> stock = new HashMap<String,Item>();
+    private Map<String, Item> stock = new LinkedHashMap<>();
     private double balance;
+    private String vendorName;
 
-    Vending(int numCandy, int numGum) {
-        stock.put("Candy", new Item(1.25, numCandy));
-        stock.put("Gum", new Item(.5, numGum));
+    Vending(String vendorName, int numCandy, int numGum) {
+        this.vendorName = vendorName;
+        stock.put("Candy", new Item(1.25, numCandy, "Sweets"));
+        stock.put("Gum", new Item(.5, numGum, "Sweets"));
         this.balance = 0;
+    }
+
+    String getVendorName() {
+        return vendorName;
     }
 
     /** resets the Balance to 0 */
@@ -37,17 +45,20 @@ class Vending {
      *
      * @param name The name of the item to purchase ("Candy" or "Gum")
      */
-    void select (String name) {
+    void select(String name) {
         if (stock.containsKey(name)) {
             Item item = stock.get(name);
-            if (balance >= item.price) {
+            if (item.stock <= 0) {
+                System.out.println("Sorry, " + name + " is sold out");
+            } else if (balance >= item.getCurrentPrice()) {
                 item.purchase(1);
-                this.balance = this.balance - item.price;
-            }
-            else
+                this.balance = this.balance - item.getCurrentPrice();
+            } else {
                 System.out.println("Gimme more money");
+            }
+        } else {
+            System.out.println("Sorry, don't know that item");
         }
-        else System.out.println("Sorry, don't know that item");
     }
 
     void restockItem (String name, int amount){
@@ -65,11 +76,11 @@ class Vending {
         return 0;
     }
 
-    void restockNewItem(String name, double price, int amount) {
+    void restockNewItem(String name, double price, int amount, String category) {
         if (stock.containsKey(name)) {
             stock.get(name).restock(amount);
         } else {
-            stock.put(name, new Item(price, amount));
+            stock.put(name, new Item(price, amount, category));
         }
     }
 
@@ -83,16 +94,17 @@ class Vending {
     }
 
     void printInventory() {
-        System.out.println("Vendor Inventory:");
-
+        System.out.println(vendorName + " Inventory:");
         for (String name : stock.keySet()) {
             Item item = stock.get(name);
-
-            System.out.println(
-                    name + " - Price: $" + item.price
-                            + ", Stock: " + item.stock
-            );
+            String line = name + " - Price: $" + item.getCurrentPrice() + ", Stock: " + item.stock;
+            if (item.discountPercent > 0) line += " (" + item.discountPercent + "% off)";
+            if (item.bestseller) line += " [BESTSELLER]";
+            System.out.println(line);
         }
+    }
+    boolean removeItem(String name) {
+        return stock.remove(name) != null;
     }
 
 
