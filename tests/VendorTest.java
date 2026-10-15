@@ -62,7 +62,7 @@ public class VendorTest {
     @Test
     void multipleVendorsTest() {
         Vending vendor1 = new Vending("Vendor1", 10, 10);
-        Vending vendor2 = new Vending("Vendor2", 10, 10);
+        Vending vendor2 = new Vending("Vendor2", 5, 3);
 
         vendor1.restockItem("Candy", 5);
 
