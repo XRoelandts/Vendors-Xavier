@@ -120,5 +120,20 @@ public class VendorTest {
         Vending vendor = new Vending("Vendor",10, 10);
         assertNull(vendor.getMostPopularItem());
     }
+    @Test
+    void itemDescriptionTest() {
+        Vending vendor = new Vending("Vendor", 10, 10);
+        vendor.setItemDescription("Candy", "Sweet and chewy");
 
+        String details = vendor.getItemDescription("Candy");
+
+        assertTrue(details.contains("Sweet and chewy"));
+        assertTrue(details.contains("1.25"));
+    }
+
+    @Test
+    void unknownItemDescriptionTest() {
+        Vending vendor = new Vending("Vendor", 10, 10);
+        assertEquals("Sorry, don't know that item", vendor.getItemDescription("Pizza"));
+    }
 }
