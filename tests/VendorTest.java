@@ -28,4 +28,13 @@ public class VendorTest {
     void emptyInventoryTest(){
         Vending vendor = new Vending(10, 10);
     }
+
+    @Test
+    void restockItemTest() {
+        Vending vendor = new Vending(10, 10);
+
+        vendor.restockItem("Candy", 5);
+
+        assertEquals(15, vendor.getItemStock("Candy"));
+    }
 }
