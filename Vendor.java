@@ -6,12 +6,12 @@ import java.util.HashMap;
  * well as the current balance of money that has been deposited into the machine.
  */
 class Vending {
-    private static HashMap<String, Item> Stock = new HashMap<String,Item>();
+    private static HashMap<String, Item> stock = new HashMap<String,Item>();
     private double balance;
 
     Vending(int numCandy, int numGum) {
-        Stock.put("Candy", new Item(1.25, numCandy));
-        Stock.put("Gum", new Item(.5, numGum));
+        stock.put("Candy", new Item(1.25, numCandy));
+        stock.put("Gum", new Item(.5, numGum));
         this.balance = 0;
     }
 
@@ -38,8 +38,8 @@ class Vending {
      * @param name The name of the item to purchase ("Candy" or "Gum")
      */
     void select (String name) {
-        if (Stock.containsKey(name)) {
-            Item item = Stock.get(name);
+        if (stock.containsKey(name)) {
+            Item item = stock.get(name);
             if (balance >= item.price) {
                 item.purchase(1);
                 this.balance = this.balance - item.price;
@@ -48,6 +48,21 @@ class Vending {
                 System.out.println("Gimme more money");
         }
         else System.out.println("Sorry, don't know that item");
+    }
+
+    void restockItem (String name, int amount){
+        if(stock.containsKey(name)){
+            Item item = stock.get(name);
+            item.restock(amount);
+        }
+    }
+
+    int getItemStock(String name) {
+        if (stock.containsKey(name)) {
+            return stock.get(name).stock;
+        }
+
+        return 0;
     }
 
 }
