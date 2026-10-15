@@ -73,6 +73,16 @@ class Vending {
         }
     }
 
+
+    void renameItem(String oldName, String newName) {
+        if (stock.containsKey(oldName) && !stock.containsKey(newName)) {
+            Item item = stock.get(oldName);
+            stock.remove(oldName);
+            stock.put(newName, item);
+        }
+    }
+
+
 }
 
 
