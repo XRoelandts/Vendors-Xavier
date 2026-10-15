@@ -82,4 +82,43 @@ public class VendorTest {
         Vending vendor = new Vending("Vendor", 10, 10);
         assertFalse(vendor.removeItem("Pizza"));
     }
+
+    @Test
+    void purchaseCountTest() {
+        Vending vendor = new Vending("Vendor",10, 10);
+        vendor.addMoney(5.00);
+
+        vendor.select("Candy");
+        vendor.select("Candy");
+        vendor.select("Gum");
+
+        assertEquals(2, vendor.getPurchaseCount("Candy"));
+        assertEquals(1, vendor.getPurchaseCount("Gum"));
+    }
+
+    @Test
+    void failedPurchaseNotCountedTest() {
+        Vending vendor = new Vending("Vendor",10, 10);
+        vendor.select("Candy"); // no money
+        assertEquals(0, vendor.getPurchaseCount("Candy"));
+    }
+
+    @Test
+    void mostPopularItemTest() {
+        Vending vendor = new Vending("Vendor",10, 10);
+        vendor.addMoney(10.00);
+
+        vendor.select("Gum");
+        vendor.select("Gum");
+        vendor.select("Candy");
+
+        assertEquals("Gum", vendor.getMostPopularItem());
+    }
+
+    @Test
+    void mostPopularItemNoSalesTest() {
+        Vending vendor = new Vending("Vendor",10, 10);
+        assertNull(vendor.getMostPopularItem());
+    }
+
 }
