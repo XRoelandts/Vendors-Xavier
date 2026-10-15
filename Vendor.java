@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -144,7 +142,48 @@ class Vending {
         }
         return "Sorry, don't know that item";
     }
+    void applyItemDiscount(String name, double percent) {
+        checkPercent(percent);
+        if (stock.containsKey(name)) {
+            stock.get(name).discountPercent = percent;
+        }
+    }
 
+    void applyCategoryDiscount(String category, double percent) {
+        checkPercent(percent);
+        for (Item item : stock.values()) {
+            if (item.category.equals(category)) {
+                item.discountPercent = percent;
+            }
+        }
+    }
+
+    double getItemPrice(String name) {
+        return stock.containsKey(name) ? stock.get(name).getCurrentPrice() : 0;
+    }
+
+    private void checkPercent(double percent) {
+        if (percent < 0 || percent > 100) {
+            throw new IllegalArgumentException("Discount must be between 0 and 100");
+        }
+    }
+    void markBestseller(String name, boolean isBestseller) {
+        if (stock.containsKey(name)) {
+            stock.get(name).bestseller = isBestseller;
+        }
+    }
+
+    boolean isBestseller(String name) {
+        return stock.containsKey(name) && stock.get(name).bestseller;
+    }
+
+    List<String> getBestsellers() {
+        List<String> result = new ArrayList<>();
+        for (Map.Entry<String, Item> e : stock.entrySet()) {
+            if (e.getValue().bestseller) result.add(e.getKey());
+        }
+        return result;
+    }
 
 
 }
