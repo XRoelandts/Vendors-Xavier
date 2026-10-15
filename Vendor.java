@@ -106,7 +106,29 @@ class Vending {
     boolean removeItem(String name) {
         return stock.remove(name) != null;
     }
+    int getPurchaseCount(String name) {
+        return stock.containsKey(name) ? stock.get(name).purchaseCount : 0;
+    }
 
+    /** name of the item purchased most often, or null if nothing has sold */
+    String getMostPopularItem() {
+        String best = null;
+        int bestCount = 0;
+        for (Map.Entry<String, Item> e : stock.entrySet()) {
+            if (e.getValue().purchaseCount > bestCount) {
+                best = e.getKey();
+                bestCount = e.getValue().purchaseCount;
+            }
+        }
+        return best;
+    }
+
+    void printSalesReport() {
+        System.out.println(vendorName + " Sales Report:");
+        for (Map.Entry<String, Item> e : stock.entrySet()) {
+            System.out.println(e.getKey() + " - Sold: " + e.getValue().purchaseCount);
+        }
+    }
 
 
 }
