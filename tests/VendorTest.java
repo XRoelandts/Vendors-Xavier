@@ -37,4 +37,13 @@ public class VendorTest {
 
         assertEquals(15, vendor.getItemStock("Candy"));
     }
+
+    @Test
+    void restockNewItemTest() {
+        Vending vendor = new Vending(10, 10);
+
+        vendor.restockNewItem("Chocolate", 2.00, 5);
+
+        assertEquals(5, vendor.getItemStock("Chocolate"));
+    }
 }
