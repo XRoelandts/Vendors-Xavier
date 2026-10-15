@@ -130,6 +130,22 @@ class Vending {
         }
     }
 
+    void setItemDescription(String name, String description) {
+        if (stock.containsKey(name)) {
+            stock.get(name).description = description;
+        }
+    }
+
+    String getItemDescription(String name) {
+        if (stock.containsKey(name)) {
+            Item item = stock.get(name);
+            return name + ": " + item.description + " (Category: " + item.category
+                    + ", Price: $" + item.getCurrentPrice() + ")";
+        }
+        return "Sorry, don't know that item";
+    }
+
+
 
 }
 
