@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VendorTest {
@@ -59,8 +61,8 @@ public class VendorTest {
 
     @Test
     void multipleVendorsTest() {
-        Vending vendor1 = new Vending("Vendor", 10, 10);
-        Vending vendor2 = new Vending("Vendor", 10, 10);
+        Vending vendor1 = new Vending("Vendor1", 10, 10);
+        Vending vendor2 = new Vending("Vendor2", 10, 10);
 
         vendor1.restockItem("Candy", 5);
 
@@ -135,5 +137,73 @@ public class VendorTest {
     void unknownItemDescriptionTest() {
         Vending vendor = new Vending("Vendor", 10, 10);
         assertEquals("Sorry, don't know that item", vendor.getItemDescription("Pizza"));
+    }
+
+    @Test
+    void itemDiscountTest() {
+        Vending vendor = new Vending("Vendor",10, 10);
+
+        vendor.applyItemDiscount("Candy", 20);
+
+        assertEquals(1.00, vendor.getItemPrice("Candy"), 0.001);
+        assertEquals(0.50, vendor.getItemPrice("Gum"), 0.001);
+    }
+
+    @Test
+    void discountedPurchaseTest() {
+        Vending vendor = new Vending("Vendor", 10, 10);
+        vendor.applyItemDiscount("Candy", 20);
+        vendor.addMoney(1.00);
+
+        vendor.select("Candy");
+
+        assertEquals(0.0, vendor.getBalance(), 0.001);
+        assertEquals(9, vendor.getItemStock("Candy"));
+    }
+
+    @Test
+    void categoryDiscountTest() {
+        Vending vendor = new Vending("Vendor", 10, 10);
+        vendor.restockNewItem("Soda", 2.00, 5, "Drinks");
+
+        vendor.applyCategoryDiscount("Sweets", 50);
+
+        assertEquals(0.625, vendor.getItemPrice("Candy"), 0.001);
+        assertEquals(0.25, vendor.getItemPrice("Gum"), 0.001);
+        assertEquals(2.00, vendor.getItemPrice("Soda"), 0.001);
+    }
+
+    @Test
+    void invalidDiscountTest() {
+        Vending vendor = new Vending("Vending", 10, 10);
+        assertThrows(IllegalArgumentException.class, () -> vendor.applyItemDiscount("Candy", 150));
+        assertThrows(IllegalArgumentException.class, () -> vendor.applyItemDiscount("Candy", -5));
+    }
+
+    @Test
+    void bestsellerTest() {
+        Vending vendor = new Vending("Vendor", 10, 10);
+
+        vendor.markBestseller("Candy", true);
+
+        assertTrue(vendor.isBestseller("Candy"));
+        assertFalse(vendor.isBestseller("Gum"));
+        assertEquals(List.of("Candy"), vendor.getBestsellers());
+    }
+
+    @Test
+    void unmarkBestsellerTest() {
+        Vending vendor = new Vending("Vendor",10, 10);
+        vendor.markBestseller("Candy", true);
+        vendor.markBestseller("Candy", false);
+        assertTrue(vendor.getBestsellers().isEmpty());
+    }
+
+    @Test
+    void bestsellerSurvivesRenameTest() {
+        Vending vendor = new Vending("Vendor",10, 10);
+        vendor.markBestseller("Candy", true);
+        vendor.renameItem("Candy", "Chocolate");
+        assertTrue(vendor.isBestseller("Chocolate"));
     }
 }
