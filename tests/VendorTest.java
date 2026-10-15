@@ -1,12 +1,12 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VendorTest {
 
     @Test
     void addMoneyTest(){
-        Vending vendor = new Vending(10, 10);
+        Vending vendor = new Vending("Vendor", 10, 10);
 
         vendor.addMoney(5.00);
 
@@ -15,7 +15,7 @@ public class VendorTest {
 
     @Test
     void buyItemTest(){
-        Vending vendor = new Vending(10, 10);
+        Vending vendor = new Vending("Vendor", 10, 10);
 
         vendor.addMoney(1.25);
         vendor.select("Candy");
@@ -26,13 +26,12 @@ public class VendorTest {
 
     @Test
     void emptyInventoryTest(){
-        Vending vendor = new Vending(10, 10);
+        Vending vendor = new Vending("Vendor", 10, 10);
     }
 
     @Test
     void restockItemTest() {
-        Vending vendor = new Vending(10, 10);
-
+        Vending vendor = new Vending("Vendor", 10, 10);
         vendor.restockItem("Candy", 5);
 
         assertEquals(15, vendor.getItemStock("Candy"));
@@ -40,9 +39,9 @@ public class VendorTest {
 
     @Test
     void restockNewItemTest() {
-        Vending vendor = new Vending(10, 10);
+        Vending vendor = new Vending("Vendor", 10, 10);
 
-        vendor.restockNewItem("Chocolate", 2.00, 5);
+        vendor.restockNewItem("Chocolate", 2.00, 5, "Sweets");
 
         assertEquals(5, vendor.getItemStock("Chocolate"));
     }
@@ -50,7 +49,7 @@ public class VendorTest {
 
     @Test
     void renameItemTest() {
-        Vending vendor = new Vending(10, 10);
+        Vending vendor = new Vending("Vendor", 10, 10);
 
         vendor.renameItem("Candy", "Chocolate");
 
@@ -60,12 +59,27 @@ public class VendorTest {
 
     @Test
     void multipleVendorsTest() {
-        Vending vendor1 = new Vending(10, 10);
-        Vending vendor2 = new Vending(5, 3);
+        Vending vendor1 = new Vending("Vendor", 10, 10);
+        Vending vendor2 = new Vending("Vendor", 10, 10);
 
         vendor1.restockItem("Candy", 5);
 
         assertEquals(15, vendor1.getItemStock("Candy"));
         assertEquals(5, vendor2.getItemStock("Candy"));
+    }
+
+    @Test
+    void removeItemTest() {
+        Vending vendor = new Vending("Vendor", 10, 10);
+
+        assertTrue(vendor.removeItem("Gum"));
+        assertEquals(0, vendor.getItemStock("Gum"));
+        assertEquals(10, vendor.getItemStock("Candy"));
+    }
+
+    @Test
+    void removeMissingItemTest() {
+        Vending vendor = new Vending("Vendor", 10, 10);
+        assertFalse(vendor.removeItem("Pizza"));
     }
 }
